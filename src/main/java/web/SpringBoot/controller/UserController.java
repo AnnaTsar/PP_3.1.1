@@ -9,6 +9,7 @@ import web.SpringBoot.servise.UserService;
 
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
@@ -18,52 +19,49 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "/")
-    public String redirectUsersPage() {
-        return "redirect:/users";
-    }
 
-    @GetMapping(value = "users")
+    @GetMapping("")
     public String showAllUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
         return "users";
     }
 
-    @GetMapping(value = "users/add")
+
+    @GetMapping("add")
     public String newUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
         return "addUser";
     }
 
-    @PostMapping(value = "users/add")
+    @PostMapping("add")
     public String createNewUser(@ModelAttribute("user") User user) {
 
         userService.addUser(user);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
-    @GetMapping(value = "users/edit/{id}")
+    @GetMapping("edit/{id}")
     public String editUser(Model model, @PathVariable("id") Long id) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         return "editUser";
     }
 
-    @PostMapping(value = "users/edit")
+    @PostMapping("edit")
     public String updateUser(@ModelAttribute("user") User user) {
 
         userService.editUser(user);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
-    @PostMapping("users/delete")
+    @PostMapping("delete")
     public String deleteUserById(@RequestParam("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
-    @GetMapping("users/{id}")
+    @GetMapping("{id}")
     public String showUserPage(@PathVariable("id") Long id, Model modelMap) {
         modelMap.addAttribute("user", userService.getUserById(id));
         return "show";
